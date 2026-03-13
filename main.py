@@ -1,15 +1,11 @@
 import streamlit as st
 import random
+import urllib.parse
 
-# --- CONFIGURACIÓN DE PÁGINA (AQUÍ SE DEFINE EL NOMBRE DE LA APP) ---
-st.set_page_config(
-    page_title="Impostor", 
-    page_icon="🕵️‍♂️", 
-    layout="centered",
-    initial_sidebar_state="collapsed"
-)
+# --- CONFIGURACIÓN DE PÁGINA ---
+st.set_page_config(page_title="Impostor", page_icon="🕵️‍♂️", layout="centered")
 
-# Estilo CSS minimalista
+# Estilo CSS
 st.markdown("""
     <style>
     .main { background-color: #121212; }
@@ -23,6 +19,19 @@ st.markdown("""
         font-size: 18px;
         font-weight: bold;
     }
+    .btn-social {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        color: white !important;
+    }
+    .btn-whatsapp { background-color: #25D366; }
+    .btn-cafe { background-color: #FF813F; }
     .role-card {
         padding: 30px;
         border-radius: 20px;
@@ -31,10 +40,7 @@ st.markdown("""
         border: 2px solid #333;
         margin-bottom: 20px;
     }
-    /* Estilos para asegurar legibilidad en modo oscuro */
     h1, h2, h3, p, span, label { color: white !important; text-align: center; }
-    div[data-baseweb="select"] > div { background-color: #1E1E1E !important; color: white !important; }
-    input { background-color: #1E1E1E !important; color: white !important; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -45,25 +51,25 @@ CATEGORIAS = {
     "Objetos": ["Móvil", "Ordenador", "Televisión", "Reloj", "Gafas de sol", "Llaves", "Cartera", "Paraguas", "Mochila", "Bolígrafo", "Libro", "Cuaderno", "Tijeras", "Lámpara", "Espejo", "Peine", "Cepillo de dientes", "Jabón", "Toalla", "Silla", "Mesa", "Sofá", "Cama", "Almohada", "Manta", "Ventilador", "Aire acondicionado", "Nevera", "Microondas", "Horno", "Tostadora", "Cafetera", "Sartén", "Cuchillo", "Tenedor", "Cuchara", "Plato", "Vaso", "Botella", "Martillo", "Destornillador", "Taladro", "Escalera", "Linterna", "Pilas", "Cámara", "Auriculares", "Guitarra", "Piano", "Balón", "Bicicleta", "Casco", "Patinete", "Coche", "Neumático", "Anillo", "Collar", "Pendientes", "Pintalabios", "Perfume", "Secador", "Aspiradora", "Plancha", "Máquina de coser", "Aguja", "Hilo", "Botón", "Cremallera", "Zapatos", "Calcetines", "Pantalones", "Camiseta", "Sombrero", "Guantes", "Bufanda", "Maleta", "Pasaporte", "Billete", "Moneda", "Tarjeta", "Escoba", "Cubo de basura", "Papel higiénico", "Periódico", "Diccionario", "Mapa", "Brújula", "Telescopio", "Microscopio", "Calculadora", "Mando", "Consola", "Extintor", "Botiquín", "Termómetro", "Jeringuilla", "Vela", "Cerillas", "Encendedor", "Papelera"]
 }
 
-# --- ESTADO DE LA APP ---
 if 'paso' not in st.session_state:
     st.session_state.paso = 'config'
     st.session_state.jugador_actual = 0
     st.session_state.viendo_rol = False
 
-# --- PANTALLAS ---
+# --- LÓGICA DE COMPARTIR ---
+url_app = "app-impostor-joseballazn-jwgnderxxewapp86czbps4b.streamli.app"
+msg_whatsapp = urllib.parse.quote(f"¡Mira este juego para fiestas! Se llama Impostor y es genial: {url_app}")
 
 if st.session_state.paso == 'config':
-    st.title("🕵️‍♂️ Configuración")
-    n_jugadores = st.number_input("¿Cuántos jugadores sois?", min_value=3, max_value=20, value=4)
+    st.title("🕵️‍♂️ Impostor")
+    n_jugadores = st.number_input("¿Cuántos jugadores?", min_value=3, max_value=20, value=4)
     n_impostores = st.number_input("Número de impostores", min_value=1, max_value=max(1, n_jugadores-2), value=1)
-    cat_elegida = st.selectbox("Categoría de la partida", list(CATEGORIAS.keys()))
+    cat_elegida = st.selectbox("Categoría", list(CATEGORIAS.keys()))
     
     if st.button("PREPARAR PARTIDA"):
         palabra = random.choice(CATEGORIAS[cat_elegida])
         roles = ["Impostor"] * n_impostores + ["Ciudadano"] * (n_jugadores - n_impostores)
         random.shuffle(roles)
-        
         st.session_state.roles = roles
         st.session_state.palabra = palabra
         st.session_state.categoria = cat_elegida
@@ -71,14 +77,23 @@ if st.session_state.paso == 'config':
         st.session_state.jugador_actual = 0
         st.rerun()
 
+    # --- SECCIÓN SOCIAL ---
+    st.markdown("---")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(f'<a href="https://wa.me/?text={msg_whatsapp}" class="btn-social btn-whatsapp">📲 Compartir</a>', unsafe_allow_html=True)
+    with col2:
+        # CAMBIA ESTE ENLACE POR TU PAYPAL O KO-FI
+        st.markdown(f'<a href="https://www.paypal.me/JoseBallesta570" class="btn-social btn-cafe">☕ Invítame</a>', unsafe_allow_html=True)
+
+# (Resto del código de reparto y juego se mantiene igual...)
 elif st.session_state.paso == 'reparto':
     actual = st.session_state.jugador_actual
     total = len(st.session_state.roles)
-    
     if actual < total:
         st.subheader(f"Jugador {actual + 1}")
         if not st.session_state.viendo_rol:
-            st.write("Pasa el móvil al siguiente jugador.")
+            st.write("Pasa el móvil al siguiente.")
             if st.button("VER ROL"):
                 st.session_state.viendo_rol = True
                 st.rerun()
@@ -92,7 +107,6 @@ elif st.session_state.paso == 'reparto':
                 st.success("ERES CIUDADANO")
                 st.write(f"Palabra secreta: **{st.session_state.palabra}**")
             st.markdown('</div>', unsafe_allow_html=True)
-            
             if st.button("OCULTAR"):
                 st.session_state.jugador_actual += 1
                 st.session_state.viendo_rol = False
@@ -104,7 +118,7 @@ elif st.session_state.paso == 'reparto':
 elif st.session_state.paso == 'juego':
     st.title("¡A jugar!")
     st.write(f"Categoría: **{st.session_state.categoria}**")
-    st.info("Buscad al impostor. ¡Mucha suerte!")
+    st.info("Buscad al impostor.")
     if st.button("REINICIAR JUEGO"):
         st.session_state.paso = 'config'
         st.rerun()
