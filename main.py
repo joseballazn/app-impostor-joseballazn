@@ -58,7 +58,7 @@ if 'paso' not in st.session_state:
 
 # --- LÓGICA DE COMPARTIR ---
 url_app = "https://app-impostor-joseballazn-jwgnderxxewapp86czbps4b.streamlit.app/"
-msg_whatsapp = urllib.parse.quote(f"¡Mira este juego para fiestas! Se llama Impostor y es genial: {url_app}")
+msg_whatsapp = urllib.parse.quote(f"¡Mira este juego para disfrutar con amigos y en familia! Se llama Impostor y es genial: {url_app}")
 
 if st.session_state.paso == 'config':
     st.title("🕵️‍♂️ Impostor")
