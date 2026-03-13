@@ -57,7 +57,7 @@ if 'paso' not in st.session_state:
     st.session_state.viendo_rol = False
 
 # --- LÓGICA DE COMPARTIR ---
-url_app = "app-impostor-joseballazn-jwgnderxxewapp86czbps4b.streamli.app"
+url_app = "https://app-impostor-joseballazn-jwgnderxxewapp86czbps4b.streamlit.app/"
 msg_whatsapp = urllib.parse.quote(f"¡Mira este juego para fiestas! Se llama Impostor y es genial: {url_app}")
 
 if st.session_state.paso == 'config':
