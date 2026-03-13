@@ -1,0 +1,138 @@
+import streamlit as st
+import random
+
+# --- CONFIGURACIÓN DE PÁGINA ---
+st.set_page_config(page_title="Impostor Offline", page_icon="🕵️‍♂️", layout="centered")
+
+# Estilo CSS para que se vea como una App minimalista
+st.markdown("""
+    <style>
+    .main { background-color: #121212; }
+    .stButton>button {
+        width: 100%;
+        border-radius: 12px;
+        height: 3.5em;
+        background-color: #2E7D32;
+        color: white;
+        border: none;
+        font-size: 18px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .stButton>button:hover { background-color: #388E3C; border: none; }
+    .role-card {
+        padding: 30px;
+        border-radius: 20px;
+        background-color: #1E1E1E;
+        text-align: center;
+        border: 2px solid #333;
+        margin-bottom: 20px;
+    }
+    h1, h2, h3, p { color: white !important; text-align: center; }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- BASE DE DATOS DE PALABRAS ---
+CATEGORIAS = {
+    "Lugares": [
+        "Cine", "Gimnasio", "Hospital", "Supermercado", "Aeropuerto", "Biblioteca", "Playa", "Casino", "Escuela", "Restaurante",
+        "Zoo", "Estación espacial", "Museo", "Base militar", "Submarino", "Circo", "Hotel", "Peluquería", "Iglesia", "Parque de atracciones",
+        "Estadio de fútbol", "Fábrica", "Castillo", "Granja", "Crucero", "Desierto", "Selva", "Laboratorio", "Banco", "Prisión",
+        "Teatro", "Gasolinera", "Farmacia", "Spa", "Ayuntamiento", "Comisaría", "Cementerio", "Discoteca", "Juguetería", "Tribunal",
+        "Campamento", "Concierto", "Universidad", "Panadería", "Embajada", "Puente", "Faro", "Mina", "Jungla", "Palacio",
+        "Rascacielos", "Estación de esquí", "Bosque", "Isla desierta", "Volcán", "Mercado", "Invernadero", "Autobús", "Tren", "Mansión",
+        "Estación de bomberos", "Puerto", "Acuario", "Observatorio", "Estadio de tenis", "Pista de hielo", "Lavandería", "Oficina", "Garaje", "Centro comercial",
+        "Safari", "Templo", "Cueva", "Viñedo", "Jardín", "Campo de golf", "Base antártica", "Pirámide", "Casa blanca", "Pentágono",
+        "Coliseo", "Torre Eiffel", "Gran Muralla", "Stonehenge", "Everest", "Titanic", "El Olimpo", "Arca de Noé", "El Infierno", "El Paraíso",
+        "Narnia", "Hogwarts", "Batcueva", "Estrella de la Muerte", "Neverland", "País de las Maravillas", "Tierra Media", "Ciudad Gótica", "Springfield", "Área 51"
+    ],
+    "Personajes Famosos": [
+        "Lionel Messi", "Cristiano Ronaldo", "Michael Jackson", "Elvis Presley", "Albert Einstein", "Marilyn Monroe", "Leonardo da Vinci", "Cleopatra", "Napoleón", "Mahatma Gandhi",
+        "Steve Jobs", "Bill Gates", "Elon Musk", "Mark Zuckerberg", "Donald Trump", "Barack Obama", "Reina Isabel II", "Papa Francisco", "Nelson Mandela", "Marie Curie",
+        "Pablo Picasso", "Frida Kahlo", "Salvador Dalí", "Walt Disney", "William Shakespeare", "Isaac Newton", "Charles Darwin", "Mozart", "Beethoven", "Freddie Mercury",
+        "Madonna", "Beyoncé", "Taylor Swift", "Shakira", "Lady Gaga", "Michael Jordan", "Rafael Nadal", "Usain Bolt", "Muhammad Ali", "Tiger Woods",
+        "Brad Pitt", "Angelina Jolie", "Tom Cruise", "Leonardo DiCaprio", "Will Smith", "Johnny Depp", "Julia Roberts", "Meryl Streep", "Jackie Chan", "Arnold Schwarzenegger",
+        "Batman", "Superman", "Spider-Man", "Iron Man", "Harry Potter", "Sherlock Holmes", "James Bond", "Darth Vader", "Luke Skywalker", "Yoda",
+        "Jack Sparrow", "Indiana Jones", "Lara Croft", "Mario Bros", "Pikachu", "Mickey Mouse", "Bugs Bunny", "Homer Simpson", "Bob Esponja", "Shrek",
+        "Cenicienta", "Blancanieves", "Elsa", "El Joker", "Hannibal Lecter", "Drácula", "Frankenstein", "El Zorro", "Robin Hood", "Don Quijote",
+        "Jesucristo", "Buda", "Cristóbal Colón", "Julio César", "Alejandro Magno", "Abraham Lincoln", "Martin Luther King", "Malala Yousafzai", "Greta Thunberg", "Neil Armstrong",
+        "Pelé", "Maradona", "Serena Williams", "Stephen Hawking", "Vincent van Gogh", "Agatha Christie", "J.K. Rowling", "Steven Spielberg", "Oprah Winfrey", "Mr. Beast"
+    ],
+    "Objetos": [
+        "Móvil", "Ordenador", "Televisión", "Reloj", "Gafas de sol", "Llaves", "Cartera", "Paraguas", "Mochila", "Bolígrafo",
+        "Libro", "Cuaderno", "Tijeras", "Lámpara", "Espejo", "Peine", "Cepillo de dientes", "Jabón", "Toalla", "Silla",
+        "Mesa", "Sofá", "Cama", "Almohada", "Manta", "Ventilador", "Aire acondicionado", "Nevera", "Microondas", "Horno",
+        "Tostadora", "Cafetera", "Sartén", "Cuchillo", "Tenedor", "Cuchara", "Plato", "Vaso", "Botella", "Martillo",
+        "Destornillador", "Taladro", "Escalera", "Linterna", "Pilas", "Cámara", "Auriculares", "Guitarra", "Piano", "Balón",
+        "Bicicleta", "Casco", "Patinete", "Coche", "Neumático", "Anillo", "Collar", "Pendientes", "Pintalabios", "Perfume",
+        "Secador", "Aspiradora", "Plancha", "Máquina de coser", "Aguja", "Hilo", "Botón", "Cremallera", "Zapatos", "Calcetines",
+        "Pantalones", "Camiseta", "Sombrero", "Guantes", "Bufanda", "Maleta", "Pasaporte", "Billete", "Moneda", "Tarjeta",
+        "Escoba", "Cubo de basura", "Papel higiénico", "Periódico", "Diccionario", "Mapa", "Brújula", "Telescopio", "Microscopio", "Calculadora",
+        "Mando", "Consola", "Extintor", "Botiquín", "Termómetro", "Jeringuilla", "Vela", "Cerillas", "Encendedor", "Papelera"
+    ]
+}
+
+# --- LÓGICA DE ESTADO ---
+if 'paso' not in st.session_state:
+    st.session_state.paso = 'config'
+    st.session_state.jugador_actual = 0
+    st.session_state.viendo_rol = False
+
+# --- PANTALLAS ---
+
+if st.session_state.paso == 'config':
+    st.title("🕵️‍♂️ Impostor Offline")
+    num_jugadores = st.number_input("¿Cuántos sois?", min_value=3, max_value=20, value=4)
+    cat_elegida = st.selectbox("Elige Categoría", list(CATEGORIAS.keys()))
+    
+    if st.button("PREPARAR PARTIDA"):
+        palabra = random.choice(CATEGORIAS[cat_elegida])
+        roles = ["Ciudadano"] * (num_jugadores - 1) + ["Impostor"]
+        random.shuffle(roles)
+        st.session_state.roles = roles
+        st.session_state.palabra = palabra
+        st.session_state.categoria = cat_elegida
+        st.session_state.paso = 'reparto'
+        st.rerun()
+
+elif st.session_state.paso == 'reparto':
+    actual = st.session_state.jugador_actual
+    total = len(st.session_state.roles)
+    
+    if actual < total:
+        st.subheader(f"Jugador {actual + 1}")
+        
+        if not st.session_state.viendo_rol:
+            st.write("Pasa el móvil al siguiente jugador.")
+            if st.button(f"VER MI ROL"):
+                st.session_state.viendo_rol = True
+                st.rerun()
+        else:
+            rol = st.session_state.roles[actual]
+            st.markdown('<div class="role-card">', unsafe_allow_html=True)
+            if rol == "Impostor":
+                st.error("ERES EL IMPOSTOR")
+                st.write(f"Categoría: **{st.session_state.categoria}**")
+            else:
+                st.success("ERES CIUDADANO")
+                st.write(f"Palabra: **{st.session_state.palabra}**")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            if st.button("ENTENDIDO (OCULTAR)"):
+                st.session_state.jugador_actual += 1
+                st.session_state.viendo_rol = False
+                st.rerun()
+    else:
+        st.session_state.paso = 'juego'
+        st.rerun()
+
+elif st.session_state.paso == 'juego':
+    st.title("¡A jugar!")
+    st.write(f"Categoría elegida: **{st.session_state.categoria}**")
+    st.info("Poned el móvil en el centro de la mesa. ¡Tenéis 5 minutos!")
+    
+    if st.button("NUEVA PARTIDA"):
+        st.session_state.paso = 'config'
+        st.session_state.jugador_actual = 0
+        st.rerun()
+      
