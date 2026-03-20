@@ -44,11 +44,36 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- BASE DE DATOS DE PALABRAS ---
-CATEGORIAS = {
-    "Lugares": ["Cine", "Gimnasio", "Hospital", "Supermercado", "Aeropuerto", "Biblioteca", "Playa", "Casino", "Escuela", "Restaurante", "Zoo", "Estación espacial", "Museo", "Base militar", "Submarino", "Circo", "Hotel", "Peluquería", "Iglesia", "Parque de atracciones", "Estadio de fútbol", "Fábrica", "Castillo", "Granja", "Crucero", "Desierto", "Selva", "Laboratorio", "Banco", "Prisión", "Teatro", "Gasolinera", "Farmacia", "Spa", "Ayuntamiento", "Comisaría", "Cementerio", "Discoteca", "Juguetería", "Tribunal", "Campamento", "Concierto", "Universidad", "Panadería", "Embajada", "Puente", "Faro", "Mina", "Jungla", "Palacio", "Rascacielos", "Estación de esquí", "Bosque", "Isla desierta", "Volcán", "Mercado", "Invernadero", "Autobús", "Tren", "Mansión", "Estación de bomberos", "Puerto", "Acuario", "Observatorio", "Estadio de tenis", "Pista de hielo", "Lavandería", "Oficina", "Garaje", "Centro comercial", "Safari", "Templo", "Cueva", "Viñedo", "Jardín", "Campo de golf", "Base antártica", "Pirámide", "Casa blanca", "Pentágono", "Coliseo", "Torre Eiffel", "Gran Muralla", "Stonehenge", "Everest", "Titanic", "El Olimpo", "Arca de Noé", "El Infierno", "El Paraíso", "Narnia", "Hogwarts", "Batcueva", "Estrella de la Muerte", "Neverland", "País de las Maravillas", "Tierra Media", "Ciudad Gótica", "Springfield", "Área 51"],
-    "Personajes Famosos": ["Lionel Messi", "Cristiano Ronaldo", "Michael Jackson", "Elvis Presley", "Albert Einstein", "Marilyn Monroe", "Leonardo da Vinci", "Cleopatra", "Napoleón", "Mahatma Gandhi", "Steve Jobs", "Bill Gates", "Elon Musk", "Mark Zuckerberg", "Donald Trump", "Barack Obama", "Reina Isabel II", "Papa Francisco", "Nelson Mandela", "Marie Curie", "Pablo Picasso", "Frida Kahlo", "Salvador Dalí", "Walt Disney", "William Shakespeare", "Isaac Newton", "Charles Darwin", "Mozart", "Beethoven", "Freddie Mercury", "Madonna", "Beyoncé", "Taylor Swift", "Shakira", "Lady Gaga", "Michael Jordan", "Rafael Nadal", "Usain Bolt", "Muhammad Ali", "Tiger Woods", "Brad Pitt", "Angelina Jolie", "Tom Cruise", "Leonardo DiCaprio", "Will Smith", "Johnny Depp", "Julia Roberts", "Meryl Streep", "Jackie Chan", "Arnold Schwarzenegger", "Batman", "Superman", "Spider-Man", "Iron Man", "Harry Potter", "Sherlock Holmes", "James Bond", "Darth Vader", "Luke Skywalker", "Yoda", "Jack Sparrow", "Indiana Jones", "Lara Croft", "Mario Bros", "Pikachu", "Mickey Mouse", "Bugs Bunny", "Homer Simpson", "Bob Esponja", "Shrek", "Cenicienta", "Blancanieves", "Elsa", "El Joker", "Hannibal Lecter", "Drácula", "Frankenstein", "El Zorro", "Robin Hood", "Don Quijote", "Jesucristo", "Buda", "Cristóbal Colón", "Julio César", "Alejandro Magno", "Abraham Lincoln", "Martin Luther King", "Malala Yousafzai", "Greta Thunberg", "Neil Armstrong", "Pelé", "Maradona", "Serena Williams", "Stephen Hawking", "Vincent van Gogh", "Agatha Christie", "J.K. Rowling", "Steven Spielberg", "Oprah Winfrey", "Mr. Beast"],
-    "Objetos": ["Móvil", "Ordenador", "Televisión", "Reloj", "Gafas de sol", "Llaves", "Cartera", "Paraguas", "Mochila", "Bolígrafo", "Libro", "Cuaderno", "Tijeras", "Lámpara", "Espejo", "Peine", "Cepillo de dientes", "Jabón", "Toalla", "Silla", "Mesa", "Sofá", "Cama", "Almohada", "Manta", "Ventilador", "Aire acondicionado", "Nevera", "Microondas", "Horno", "Tostadora", "Cafetera", "Sartén", "Cuchillo", "Tenedor", "Cuchara", "Plato", "Vaso", "Botella", "Martillo", "Destornillador", "Taladro", "Escalera", "Linterna", "Pilas", "Cámara", "Auriculares", "Guitarra", "Piano", "Balón", "Bicicleta", "Casco", "Patinete", "Coche", "Neumático", "Anillo", "Collar", "Pendientes", "Pintalabios", "Perfume", "Secador", "Aspiradora", "Plancha", "Máquina de coser", "Aguja", "Hilo", "Botón", "Cremallera", "Zapatos", "Calcetines", "Pantalones", "Camiseta", "Sombrero", "Guantes", "Bufanda", "Maleta", "Pasaporte", "Billete", "Moneda", "Tarjeta", "Escoba", "Cubo de basura", "Papel higiénico", "Periódico", "Diccionario", "Mapa", "Brújula", "Telescopio", "Microscopio", "Calculadora", "Mando", "Consola", "Extintor", "Botiquín", "Termómetro", "Jeringuilla", "Vela", "Cerillas", "Encendedor", "Papelera"]
+# --- BASE DE DATOS (Palabra, Pista Relacionada) ---
+DATOS = {
+    "Lugares": [
+        ("Cine", "Pantalla"), ("Hospital", "Salud"), ("Escuela", "Libros"), ("Museo", "Arte"), 
+        ("Aeropuerto", "Aviones"), ("Playa", "Arena"), ("Gimnasio", "Pesas"), ("Casino", "Cartas"),
+        ("Zoo", "Animales"), ("Base espacial", "Cohete"), ("Submarino", "Agua"), ("Circo", "Carpa"),
+        ("Hotel", "Cama"), ("Iglesia", "Rezar"), ("Fábrica", "Humo"), ("Castillo", "Rey"),
+        ("Granja", "Tractor"), ("Crucero", "Barco"), ("Desierto", "Calor"), ("Selva", "Árboles"),
+        ("Banco", "Dinero"), ("Prisión", "Cárcel"), ("Teatro", "Escenario"), ("Farmacia", "Pastillas"),
+        ("Spa", "Relax"), ("Cementerio", "Tumbas"), ("Discoteca", "Baile"), ("Palacio", "Lujo"),
+        ("Volcán", "Lava"), ("Bosque", "Leña"), ("Pirámide", "Egipto"), ("Hogwarts", "Magia")
+    ],
+    "Personajes Famosos": [
+        ("Lionel Messi", "Fútbol"), ("Cristiano Ronaldo", "Goles"), ("Michael Jackson", "Pop"),
+        ("Albert Einstein", "Ciencia"), ("Marilyn Monroe", "Rubia"), ("Napoleón", "Guerra"),
+        ("Steve Jobs", "Manzana"), ("Elon Musk", "Marte"), ("Donald Trump", "Peluquín"),
+        ("Batman", "Murciélago"), ("Superman", "Capa"), ("Spider-Man", "Araña"),
+        ("Harry Potter", "Gafas"), ("Sherlock Holmes", "Lupa"), ("Darth Vader", "Espada"),
+        ("Mickey Mouse", "Ratón"), ("Homer Simpson", "Donut"), ("Shrek", "Ogro"),
+        ("Pikachu", "Rayo"), ("Mario Bros", "Gorra")
+    ],
+    "Objetos": [
+        ("Móvil", "Llamada"), ("Ordenador", "Teclado"), ("Televisión", "Mando"), ("Reloj", "Hora"),
+        ("Gafas de sol", "Luz"), ("Llaves", "Puerta"), ("Cartera", "Monedas"), ("Paraguas", "Lluvia"),
+        ("Mochila", "Espalda"), ("Bolígrafo", "Tinta"), ("Libro", "Hojas"), ("Espejo", "Reflejo"),
+        ("Silla", "Asiento"), ("Sofá", "Salón"), ("Cama", "Dormir"), ("Nevera", "Frío"),
+        ("Microondas", "Calentar"), ("Cafetera", "Desayuno"), ("Cuchillo", "Filo"), ("Guitarra", "Cuerdas"),
+        ("Bicicleta", "Pedales"), ("Coche", "Ruedas"), ("Anillo", "Dedo"), ("Perfume", "Olor"),
+        ("Zapatos", "Pies"), ("Mapa", "Ruta"), ("Brújula", "Norte"), ("Vela", "Fuego")
+    ]
 }
 
 if 'paso' not in st.session_state:
@@ -56,45 +81,44 @@ if 'paso' not in st.session_state:
     st.session_state.jugador_actual = 0
     st.session_state.viendo_rol = False
 
-# --- LÓGICA DE COMPARTIR ---
-url_app = "https://app-impostor-joseballazn-jwgnderxxewapp86czbps4b.streamlit.app/"
-msg_whatsapp = urllib.parse.quote(f"¡Mira este juego para disfrutar con amigos y en familia! Se llama Impostor y es genial: {url_app}")
+# Configuración (Cambia estas URLs por las tuyas)
+url_app = "https://tu-app.streamlit.app" 
+msg_whatsapp = urllib.parse.quote(f"¡Mira este juego! Se llama Impostor: {url_app}")
 
 if st.session_state.paso == 'config':
     st.title("🕵️‍♂️ Impostor")
     n_jugadores = st.number_input("¿Cuántos jugadores?", min_value=3, max_value=20, value=4)
     n_impostores = st.number_input("Número de impostores", min_value=1, max_value=max(1, n_jugadores-2), value=1)
-    cat_elegida = st.selectbox("Categoría", list(CATEGORIAS.keys()))
+    cat_elegida = st.selectbox("Categoría", list(DATOS.keys()))
+    
+    dar_pista = st.toggle("Activar pista para el Impostor", value=True)
     
     if st.button("PREPARAR PARTIDA"):
-        palabra = random.choice(CATEGORIAS[cat_elegida])
+        item_elegido = random.choice(DATOS[cat_elegida]) # Elige un par (Palabra, Pista)
+        palabra, pista = item_elegido
+        
         roles = ["Impostor"] * n_impostores + ["Ciudadano"] * (n_jugadores - n_impostores)
         random.shuffle(roles)
+        
         st.session_state.roles = roles
         st.session_state.palabra = palabra
+        st.session_state.pista = pista if dar_pista else None
         st.session_state.categoria = cat_elegida
         st.session_state.paso = 'reparto'
         st.session_state.jugador_actual = 0
         st.rerun()
 
-    # --- SECCIÓN SOCIAL ---
     st.markdown("---")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f'<a href="https://wa.me/?text={msg_whatsapp}" class="btn-social btn-whatsapp">📲 Compartir</a>', unsafe_allow_html=True)
-    with col2:
-        # CAMBIA ESTE ENLACE POR TU PAYPAL O KO-FI
-        st.markdown(f'<a href="https://www.paypal.me/JoseBallesta570" class="btn-social btn-cafe">☕ Invítame</a>', unsafe_allow_html=True)
+    c1, c2 = st.columns(2)
+    with c1: st.markdown(f'<a href="https://wa.me/?text={msg_whatsapp}" class="btn-social btn-whatsapp">📲 Compartir</a>', unsafe_allow_html=True)
+    with c2: st.markdown(f'<a href="https://paypal.me/tuusuario" class="btn-social btn-cafe">☕ Invítame</a>', unsafe_allow_html=True)
 
-# (Resto del código de reparto y juego se mantiene igual...)
 elif st.session_state.paso == 'reparto':
     actual = st.session_state.jugador_actual
-    total = len(st.session_state.roles)
-    if actual < total:
+    if actual < len(st.session_state.roles):
         st.subheader(f"Jugador {actual + 1}")
         if not st.session_state.viendo_rol:
-            st.write("Pasa el móvil al siguiente.")
-            if st.button("VER ROL"):
+            if st.button("VER MI ROL"):
                 st.session_state.viendo_rol = True
                 st.rerun()
         else:
@@ -102,10 +126,11 @@ elif st.session_state.paso == 'reparto':
             st.markdown('<div class="role-card">', unsafe_allow_html=True)
             if rol == "Impostor":
                 st.error("ERES EL IMPOSTOR")
-                st.write(f"Categoría: **{st.session_state.categoria}**")
+                if st.session_state.pista:
+                    st.info(f"Pista: **{st.session_state.pista}**")
             else:
                 st.success("ERES CIUDADANO")
-                st.write(f"Palabra secreta: **{st.session_state.palabra}**")
+                st.write(f"Palabra: **{st.session_state.palabra}**")
             st.markdown('</div>', unsafe_allow_html=True)
             if st.button("OCULTAR"):
                 st.session_state.jugador_actual += 1
@@ -116,10 +141,9 @@ elif st.session_state.paso == 'reparto':
         st.rerun()
 
 elif st.session_state.paso == 'juego':
-    st.title("¡A jugar!")
+    st.title("¡A debatir!")
     st.write(f"Categoría: **{st.session_state.categoria}**")
-    st.info("Buscad al impostor.")
-    if st.button("REINICIAR JUEGO"):
+    if st.button("NUEVA PARTIDA"):
         st.session_state.paso = 'config'
         st.rerun()
         
